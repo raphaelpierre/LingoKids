@@ -1,0 +1,1 @@
+export { MatchingGame } from './MatchingGame';
