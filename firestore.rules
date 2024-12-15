@@ -1,0 +1,36 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Authentication helper function
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Verify the user is accessing their own data
+    function isUserOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Progress collection rules
+    match /progress/{userId} {
+      // Only allow authenticated users to read/write their own progress
+      allow read, write: if isUserOwner(userId);
+    }
+
+    // User profile rules (if you have a user profiles collection)
+    match /users/{userId} {
+      allow read, write: if isUserOwner(userId);
+    }
+
+    // Game scores collection rules
+    match /gameScores/{userId} {
+      allow read, write: if isUserOwner(userId);
+    }
+
+    // Global read-only data (like game configurations, word lists)
+    match /globalData/{document} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}

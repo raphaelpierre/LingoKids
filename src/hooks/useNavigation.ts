@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 export type NavigationSection = 'words' | 'games' | 'progress' | 'profile';
 
 export function useNavigation() {
